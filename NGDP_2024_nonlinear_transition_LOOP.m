@@ -60,7 +60,7 @@ R_guess_stack_init = R_init + linspace(R_lower,R_upper,N_guess_init);
 %Stochastic simulations
 %--------------------------- 
 T_sim2 = T_fin - T_sim; Index_loc = NaN(n_sim,1);  Index_loc2 = Index_loc;
-Max_resid = NaN(n_sim,1); Resid_init_stack = Max_resid; U_init_stack = NaN(n_sim,1); 
+Max_resid = NaN(n_sim,1); Resid_init_stack = Max_resid; U_init_stack = Max_resid; Max_resid2 = Max_resid;
 U_stack = NaN(n_sim,T_sim2); U_sum_stack = U_stack; U_sum_stack0 = U_init_stack; Resid_init = NaN;
 
 for j = 1:n_sim
@@ -74,6 +74,7 @@ for j = 1:n_sim
     Index_loc(j) = max(Index);
     Index_loc2(j) = min(Index);
     Max_resid(j) = max(Max_Resid);
+    Max_resid2(j) = max(Resid_check);
 
     Resid_init_stack(j) = Resid_init;
 
@@ -103,6 +104,7 @@ else
 end
 
 max(Max_resid)
+max(Max_resid2)
 
 if Announced == 1
     Resid_init_max = max(Resid_init_stack)
