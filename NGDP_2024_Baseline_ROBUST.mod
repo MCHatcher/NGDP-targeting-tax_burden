@@ -145,6 +145,9 @@ for i=1:n_loop
 
 end
 
+[U_ss_max,Index_ss] = max(U_ss);
+[U_stoch_max,Index_stoch] = max(Stack_utility);
+
 NGDP_Baseline_Plotter
 
 //--------------------
