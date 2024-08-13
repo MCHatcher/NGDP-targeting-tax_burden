@@ -1,4 +1,4 @@
-//Code for simulating the simple model (Fig 1 and Fig 2 in the paper). 
+//Dynare code for simulating the simple model (Figs 1-3 in the paper). 
 //Written by Michael Hatcher (m.c.hatcher@soton.ac.uk). Any errors are my own.
 
 //-----------------------------------------

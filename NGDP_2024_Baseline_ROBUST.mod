@@ -1,4 +1,4 @@
-//Code for robsutness checks in the simple model (Supplementary Appendix). 
+//Dynare code for robsutness checks in the simple model (Supplementary Appendix). 
 //Written by Michael Hatcher (m.c.hatcher@soton.ac.uk). Any errors are my own.
 
 //-----------------------------------------
