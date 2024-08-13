@@ -1,11 +1,13 @@
-%NGDP_2024_nonlinear_sim_transition 
-%Insert for the file NGDP_2024_nonlinear_transition.m and its variants
+%NGDP_2024_nonlinear_sim_transition_LAMBDA 
+%Insert for the file NGDP_2024_nonlinear_transition_LOOP_LAMBDA.m which
+%allows fast social welfare analysis for multiple social discount factors
 %Nonlinear simulation of transition to NIT in the simple model (Algorithm in Supp Appendix).
 %Written by Michael Hatcher (m.c.hatcher@soton.ac.uk). Any errors are my own.
 
 pi = NaN(T_fin,1); tau = pi; c1 = pi; c2 = pi; Index = pi; Max_Resid = pi; Lambda_NIT = pi;
 pi_prime = NaN(n_states^2,1); cprime = pi_prime; c_power = pi_prime; sdf_adj = pi_prime; 
-R = NaN(T_fin,1); EV = R; EV_reverse = R; Utility = R; U_IT = Utility; U_sum = R; Resid_check = R;
+R = NaN(T_fin,1); EV = R; EV_reverse = R; Utility = R; U_IT = Utility; U_sum = R; 
+U_sum_1 = R; U_sum_2 = R; U_sum_3 = R; U_sum_4 = R; Resid_check = R;
 
 Dummy_init = 1;
 
@@ -31,7 +33,7 @@ for t=1:T_sim
     c2(t) = alfa*(1+n)*y(t) + R_lag/pi(t)*bstar;  
 
     pi_prime = pistar*exp(states(:,1))*y(t)^(1-dummy_IT).*y_prime.^(-(1-dummy_IT));
-    Resid0 = NaN(N_guess0,1);  Resid = NaN(N_guess,1); Resid_init = NaN(N_guess_init,1); 
+    Resid0 = NaN(N_guess0,1);  Resid = NaN(N_guess,1);
 
     for k0=1:N_guess0
 
@@ -97,6 +99,7 @@ end
 
     if Announced == 1
 
+    Resid_init = NaN(N_guess_init,1);
     pi_prime = pistar*exp(states(:,1))*y(T_sim)^(1-dummy_IT).*y_prime.^(-(1-dummy_IT));
 
     for k_init=1:N_guess_init
@@ -147,7 +150,7 @@ end
     if dummy_IT == 1
         U_IT_init = Utility_init;
     else
-        load("test.mat","U_IT","U_IT_init")
+        load("test_lambda.mat","U_IT","U_IT_init")
         %Utility_init = U_IT_init;
     end
 
@@ -216,7 +219,7 @@ for t=T_sim+1:T_fin
 
     Max_Resid(t) = Resid_mini;
     Index(t) = Index_min;
-
+        
     cprime = alfa*(1+n).*y_prime + R(t)*bstar.*pi_prime.^(-1);
     c_power = cprime.^(1-gama);
     E_c_power = prob*c_power;
@@ -231,8 +234,16 @@ for t=T_sim+1:T_fin
 
     if t==T_sim+1
         U_sum(t) = omega^(t-1-T_sim)*Utility(t) + omega^(-1)*Utility_init;
+        U_sum_1(t) = omega_1^(t-1-T_sim)*Utility(t) + omega_1^(-1)*Utility_init;
+        U_sum_2(t) = omega_2^(t-1-T_sim)*Utility(t) + omega_2^(-1)*Utility_init;
+        U_sum_3(t) = omega_3^(t-1-T_sim)*Utility(t) + omega_3^(-1)*Utility_init;
+        U_sum_4(t) = omega_4^(t-1-T_sim)*Utility(t) + omega_4^(-1)*Utility_init;
     else
         U_sum(t) = omega^(t-1-T_sim)*Utility(t);
+        U_sum_1(t) = omega_1^(t-1-T_sim)*Utility(t);
+        U_sum_2(t) = omega_2^(t-1-T_sim)*Utility(t);
+        U_sum_3(t) = omega_3^(t-1-T_sim)*Utility(t);
+        U_sum_4(t) = omega_4^(t-1-T_sim)*Utility(t);
     end
 
     if dummy_IT == 0
@@ -243,10 +254,18 @@ for t=T_sim+1:T_fin
 end
 
 U_sum_tot = sum(U_sum(T_sim+1:T_fin));
+U_sum_tot_1 = sum(U_sum_1(T_sim+1:T_fin));
+U_sum_tot_2 = sum(U_sum_2(T_sim+1:T_fin));
+U_sum_tot_3 = sum(U_sum_3(T_sim+1:T_fin));
+U_sum_tot_4 = sum(U_sum_4(T_sim+1:T_fin));
 
 if dummy_IT == 1
     U_IT = Utility;
     U_sum_IT = U_sum_tot;
+    U_sum_IT_1 = U_sum_tot_1;
+    U_sum_IT_2 = U_sum_tot_2;
+    U_sum_IT_3 = U_sum_tot_3;
+    U_sum_IT_4 = U_sum_tot_4;
 end
 
 
