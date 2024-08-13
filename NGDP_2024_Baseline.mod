@@ -111,9 +111,9 @@ Stack_utility = NaN(n_loop,1); Stack_tau = Stack_utility; Stack_b = Stack_utilit
 
 for i=1:n_loop
 
-    %----------------------------------------------
-    %Find determinstic SS and use in Dynare solver
-    %----------------------------------------------
+    //----------------------------------------------
+    //Find determinstic SS and use in Dynare solver
+    //----------------------------------------------
     chi = chi_stack(i);
     NGDP_steady_state
 
@@ -124,9 +124,9 @@ for i=1:n_loop
     c2star = alfa*(1+n)*ybar + chi*(1+n)*bstar;
     utilitystar = (1/(1-gama))*(c1star^eps + betta*c2star^eps)^((1-gama)/eps);
 
-    %------------------------
-    %Stochastic simulations
-    %------------------------
+    //------------------------
+    //Stochastic simulations
+    //------------------------
     steady;   //steady(tolf=1e-10,tolx=1e-10);
 
     stoch_simul(order=2, drop=0, periods=0, irf=0, noprint);
