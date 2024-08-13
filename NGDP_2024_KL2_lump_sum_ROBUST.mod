@@ -1,32 +1,35 @@
-//Dynare code for simulating the extended model (Figs 4-6 in the paper). 
+//Dynare code for robsutness checks in the extended model (Supplementary Appendix). 
 //Written by Michael Hatcher (m.c.hatcher@soton.ac.uk). Any errors are my own.
 
 //-----------------------------------------
 //1. Variable declaration and calibration
 //-----------------------------------------
 
-var c1, c2, k, b, y, l, R, r, rk, w, pi, tau, utility, EV, c1s, c2s, ks, ys, ls, Rs, rs, rks, ws, tau_s, utility_s, EVs, x_TR, x_pi, x_c1;
-varexo e, e_a;
+var c1, c2, k, b, y, l, R, r, rk, w, pi, tau, utility, EV, c1s, c2s, ks, ys, ls, Rs, rs, rks, ws, tau_s, utility_s, EVs, x_TR, x_pi, x_c1, z;
+varexo e, e_a, e_b;
 
-parameters alfa, betta, chi, chi1, dummy_IT, eps, gama, tau_p, thetta, n, pistar, psi, gbar, bstar, c1star, c2star, utilitystar, taustar, Rstar, 
-sig_e, sig_A; 
+parameters alfa, betta, chi, chi1, deltta, dummy_IT, dummy_level, eps, gama, tau_p, thetta, n, pistar, psi, gbar, bstar, c1star, c2star, utilitystar, taustar, Rstar, 
+sig_e, sig_A, sig_b; 
 
-alfa = 0.3;  
-betta = 0.85;  
-gama = 5;  
+alfa = 0.30;
+betta = 0.85;
+gama = 5;
+deltta = 0.1;
 dummy_IT = 1;
-eps = 0.5;  
-n = 0.4;  
+dummy_level = 0;    //1 for NGDP-level targeting
+eps = 0.5;
+n = 0.4;
 chi = 1+n;
 chi1 = chi;
 pistar = 1.8;
-gbar = 0.05;  
-thetta = 0.45; 
-psi = 1;   
-tau_p = 0.025;  
+gbar = 0.05;
+thetta = 0.45;
+psi = 1;
+tau_p = 0.025;
 
-sig_e = 0.025; 
-sig_A = 0.05; 
+sig_e = 0.025;
+sig_A = 0.05;
+sig_b = 0.00;  //0.01
 
 //----------------------------------
 //1. Find steady state init vals
@@ -72,7 +75,11 @@ c2 = (1-psi*tau)*rk*k(-1) + R(-1)/pi*b(-1) + x_TR;
 x_TR = tau_p*(1+n)*w*l;
 
 //Bond supply
-b = bstar;
+//b = bstar;
+//b = bstar - deltta*(tau(-1)- steady_state(tau)) + 0.00000001*e_b;
+//b = bstar + deltta*(b(-1) - bstar) + e_b;
+//b = bstar - deltta*(y(-1) - steady_state(y)) + 0.00000001*e_b;
+b = bstar - deltta*(tau(-1)*y(-1)- steady_state(tau)*steady_state(y)) + 0.00000001*e_b;
 
 //Determination of taxes 
 tau = ( gbar + r*b(-1)/(1+n) - b ) / ( w*l + psi*rk*(k(-1)/(1+n)) );
@@ -86,8 +93,11 @@ tau = ( gbar + r*b(-1)/(1+n) - b ) / ( w*l + psi*rk*(k(-1)/(1+n)) );
 //Labour supply
 thetta*(1-l) = (1-thetta)*c1/( (1-tau-tau_p)*w );
 
+//Lagged innovation
+z = e(-1);
+
 //Determination of inflation (IT if dummy_IT=1, NGDP if dummy_IT=0)
-pi = dummy_IT*pistar*exp(e) + (1-dummy_IT)*pistar*(y(-1)/y)*exp(e);
+pi = dummy_IT*pistar*exp(e) + (1-dummy_IT)*pistar*(y(-1)/y)*exp(e-dummy_level*e(-1));
 
 //Real interest rate on bonds 
 r = R(-1)/pi;
@@ -173,6 +183,7 @@ r = R/pistar;
 rk = r/(1-psi*tau);
 x_TR = tau_p*(1+n)*w*l;
 x_c1 = c1^thetta*(1-l)^(1-thetta);
+z = 0;
 //-------------
 c1s = c1star;
 c2s = c2star;
@@ -233,7 +244,7 @@ for j=1:n_loop
     //c11star = c11_ss; c21star = c21_ss;
     //utility1star = utility1_ss;
 
-    steady;   //steady(tolf=1e-10,tolx=1e-10);
+    steady;  //steady(tolf=1e-10,tolx=1e-10);
     stoch_simul(order=2, drop=0, periods=0, irf=0, noprint);
 
     Loop_record_KL2
