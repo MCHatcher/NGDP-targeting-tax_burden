@@ -14,7 +14,7 @@ alfa = 0.3;
 betta = 0.85;  
 chi = 1;
 deltta = 0.3;
-dummy_IT = 0;
+dummy_IT = 1;
 dummy_level = 0;  //1 for NGDP-level taregting
 gama = 5;   
 eps = 0.5;  
@@ -117,7 +117,7 @@ end;
 
 n_loop = 100;
 chi_stack = linspace(0.9,1.045,n_loop);
-Stack_utility = NaN(n_loop,1); Stack_tau = Stack_utility; Stack_b = Stack_utility; Lambda = Stack_utility;
+Stack_utility = NaN(n_loop,1); Stack_tau = Stack_utility; Stack_b = Stack_utility; 
 
 for i=1:n_loop
 
