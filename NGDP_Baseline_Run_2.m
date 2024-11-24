@@ -24,7 +24,7 @@ if dummy_IT==0
 
     for i=1:n_loop
         Lambda_NIT(i) = 100*( (U_NIT(i)/U_IT(i))^(1/(1-gama)) - 1);  %Consumption equiv. welfare gain 
-        Lambda_var_NIT(i) = Lambda(i) + Lambda_mean_NIT(i);
+        Lambda_var_NIT(i) = Lambda_NIT(i) - Lambda_mean_NIT(i);
     end
 
     h = openfig('first_run_plot_1.fig', 'reuse');    % open the previously saved figure and add new plots
